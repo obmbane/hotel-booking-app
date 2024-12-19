@@ -1,0 +1,23 @@
+* User Story 1:
+
+As a customer
+I want to be able to see a list of available hotels
+So that I know what options are available for booking
+
+* User Story 2:
+
+As a customer 
+I want to be able to book a hotel
+So that I can easily secure my accomodation
+
+* User Story 3:
+
+As a hotel owner
+I want to send booking confirmation tickets
+So that clients can use them to check-in at the hotel
+
+Potential Classes:
+- customer
+- Hotel
+- Ticket
+
