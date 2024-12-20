@@ -48,8 +48,6 @@ class Receipt:
         pdf.cell(w=100, h=8, txt=f"We look forward to your visit!", align='L', ln=1, border=0)
         pdf.output('receipt.pdf')
 
-
-        
         content = f"""
             Thank you for your reservation!
             Your reservation details are as follows:
@@ -58,22 +56,44 @@ class Receipt:
             Hotel: {self.hotel_name}
 
                 """
-        
         return content
 
-df = pd.read_csv('hotels.csv', dtype={'id':str})
+class CreditCard:
+    def __init__(self, number):
+        self.number = number
 
-print(df)
+    def validate(self,holder,expiration,cvc):
+        user_input ={'number': self.number,'expiration':expiration, 'cvc': cvc, 'holder': holder}
+        if user_input in df_card:
+            return True
+        else:
+            return False
+
+
+
+df = pd.read_csv('hotels.csv', dtype={'id':str})
+df_card = pd.read_csv('cards.csv', dtype=str).to_dict(orient="records")
+print(df_card)
 
 hotel_ID = input("Please Enter Hotel ID: ")
 hotel = Hotel(hotel_ID)
 
 if hotel.available():
-    hotel.book()
-    customerName = input("Please Enter Your Name and Surname: ")
-    customer_receipt = Receipt(hotel_name=hotel.name, customer_name=customerName)
-    receipt = customer_receipt.generate()
-    print(receipt)
+    cc_holder = input("Enter Name on Credit Card: ").upper()
+    cc_num = input("Enter Credit Card Number: ")
+    cc_exp = input("Enter Credit Card Expiry Date: ")
+    cc_cvc = input("Enter Credit Card CVC Number: ")
+
+    credit_card = CreditCard(cc_num)
+    if credit_card.validate(holder=cc_holder,expiration=cc_exp,cvc=cc_cvc):
+        print("Payment Validated!")
+        hotel.book()
+        customerName = input("Please Enter Your Name and Surname: ")
+        customer_receipt = Receipt(hotel_name=hotel.name, customer_name=customerName)
+        receipt = customer_receipt.generate()
+        print(receipt)
+    else:
+        print("Issue with payment, please make sure credit card details are correct")
 
 else: 
     print("Hotel is not available")
